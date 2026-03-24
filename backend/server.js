@@ -36,6 +36,11 @@ app.use(cors({
 }));
 app.use(express.json());
 
+// Root route — prevents "Cannot GET /" on Render
+app.get('/', (req, res) => {
+  res.json({ status: 'ok', message: 'Portfolio API is running 🚀' });
+});
+
 // Basic health check route
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', message: 'Portfolio API is running' });
