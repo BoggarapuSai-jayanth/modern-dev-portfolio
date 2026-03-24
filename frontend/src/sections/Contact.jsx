@@ -26,7 +26,8 @@ const Contact = () => {
 
       // 2. Trigger Real Email send from Backend Express Server
       try {
-        await fetch('http://localhost:5000/api/contact/email', {
+        const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000';
+        await fetch(`${backendUrl}/api/contact/email`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(formData)
