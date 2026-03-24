@@ -36,7 +36,8 @@ app.use(cors({
 }));
 app.use(express.json());
 
-// Root route — prevents "Cannot GET /" on Render
+// Root route REQUIRED by Render Health Checks. 
+// Do NOT remove this, or Render will mark the site as unhealthy and show Bad Gateway.
 app.get('/', (req, res) => {
   res.json({ status: 'ok', message: 'Portfolio API is running 🚀' });
 });
