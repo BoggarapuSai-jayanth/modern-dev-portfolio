@@ -24,23 +24,26 @@ const Contact = () => {
         message: formData.message 
       });
 
-      // 2. Trigger Real Email send from Backend Express Server
-      try {
-        const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000';
-        await fetch(`${backendUrl}/api/contact/email`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(formData)
-        });
-      } catch (err) {
-        console.error("Email API failed (is node server running on 5000?):", err);
-      }
+      // 2. Trigger email — fire-and-forget with a 10s timeout so the form
+      //    never gets stuck "Sending..." if the backend is slow/unreachable.
+      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000';
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 10000);
+      fetch(`${backendUrl}/api/contact/email`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+        signal: controller.signal,
+      })
+        .catch((err) => console.warn('Email notification skipped:', err.message))
+        .finally(() => clearTimeout(timer));
 
+      // Mark success immediately — message is already saved in Convex.
       setSuccess(true);
       setFormData({ name: '', email: '', message: '' });
     } catch (err) {
       console.error(err);
-      alert("Error sending message.");
+      alert("Error sending message. Please try again.");
     } finally {
       setIsSubmitting(false);
       setTimeout(() => setSuccess(false), 5000);
