@@ -29,6 +29,8 @@ app.use(cors({
     'http://localhost:5173',
     'http://localhost:3000',
     'https://modern-dev-portfolio.vercel.app',
+    'https://modern-dev-portfolio-ihz1.vercel.app',
+    /^https:\/\/.*\.vercel\.app$/ // Allow any Vercel preview URLs dynamically
   ],
   methods: ['GET', 'POST', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
