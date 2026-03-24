@@ -1,0 +1,7 @@
+# Logs
+.env
+node_modules
+dist
+.env.local
+dist-ssr
+*.local
